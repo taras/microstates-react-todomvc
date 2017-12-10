@@ -116,6 +116,12 @@ export default class App extends Component {
    * Wrap transitions in close that'll call update on transition
    */
   update(ms) {
+    /**
+     * ms is a microstate object. map here maps values on properties of microstate.
+     * microstate only has transitions as properties so we're mapping transitions.
+     *
+     * This map function is provided by funcadelic. It allows to map transitions lazily.
+     */
     let actions = map(transition => (...args) => this.update(transition(...args)), ms)
 
     this.setState({
