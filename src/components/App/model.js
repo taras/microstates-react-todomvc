@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
-import Header from '../components/Header'
-import MainSection from '../components/MainSection'
-import microstate, * as MS from 'microstates'
-import { map } from 'funcadelic'
+import * as MS from 'microstates'
 
 /**
  * TodoMVC is a Microstate type.
@@ -16,7 +12,7 @@ import { map } from 'funcadelic'
  * 2. The custom transitions that can be performed on this type.
  * 3. The computed properties that should be applied to the state object that's derived from this type.
  */
-class TodoMVC {
+export default class TodoMVC {
   /**
    * COMPOSED TYPES
    *
@@ -95,48 +91,5 @@ class TodoMVC {
 
   clearCompleted(current) {
     return this().todos.filter(({ completed }) => !completed)
-  }
-}
-
-export default class App extends Component {
-  state = {}
-
-  componentWillMount() {
-    /**
-     * Initialize the microstate using initial data and invoke update to set the state.
-     * In the future, we will create a connect function that will handle all of this.
-     */
-    let ms = microstate(TodoMVC, {
-      todos: [{ id: 0, text: 'Write Microstates Docs', completed: false }],
-    })
-    this.update(ms)
-  }
-
-  /**
-   * Wrap transitions in close that'll call update on transition
-   */
-  update(ms) {
-    /**
-     * ms is a microstate object. map here maps values on properties of microstate.
-     * microstate only has transitions as properties so we're mapping transitions.
-     *
-     * This map function is provided by funcadelic. It allows to map transitions lazily.
-     */
-    let actions = map(transition => (...args) => this.update(transition(...args)), ms)
-
-    this.setState({
-      ...ms.state,
-      actions,
-    })
-  }
-
-  render() {
-    let { actions, todos } = this.state
-    return (
-      <div>
-        <Header addTodo={actions.addTodo} />
-        <MainSection todos={todos} completedCount={this.state.completedCount} actions={actions} />
-      </div>
-    )
   }
 }
